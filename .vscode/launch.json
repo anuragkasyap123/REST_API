@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "RestApiApplication",
+            "request": "launch",
+            "mainClass": "com.example.restapi.RestApiApplication"
+        },
+        {
+            "type": "java",
+            "name": "Run RestApiApplication",
+            "request": "launch",
+            "mainClass": "com.example.restapi.RestApiApplication",
+            "projectName": "rest-api"
+        }
+    ]
+}
