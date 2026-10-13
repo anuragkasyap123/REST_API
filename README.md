@@ -58,6 +58,37 @@ Run the tests with:
 mvn clean test
 ```
 
+## Lesson 2: CRUD and Request/Response DTOs
+
+The task API demonstrates create, read, update, and delete using JSON:
+
+| Operation | Request | Result |
+| --- | --- | --- |
+| Create | `POST /api/tasks` with a JSON body | `201 Created`, response body, and a `Location` header |
+| List | `GET /api/tasks` | `200 OK` with an array |
+| Read one | `GET /api/tasks/{id}` | `200 OK`, or `404 Not Found` |
+| Replace | `PUT /api/tasks/{id}` with a JSON body | `200 OK`, or `404 Not Found` |
+| Delete | `DELETE /api/tasks/{id}` | `204 No Content`, or `404 Not Found` |
+
+Create a task from PowerShell:
+
+```powershell
+curl.exe -i -X POST "http://localhost:8080/api/tasks" -H "Content-Type: application/json" --data-raw '{"title":"Learn REST","completed":false}'
+```
+
+Use the returned `id` for the other operations:
+
+```powershell
+curl.exe "http://localhost:8080/api/tasks"
+curl.exe "http://localhost:8080/api/tasks/1"
+curl.exe -X PUT "http://localhost:8080/api/tasks/1" -H "Content-Type: application/json" --data-raw '{"title":"Learn Spring REST","completed":true}'
+curl.exe -i -X DELETE "http://localhost:8080/api/tasks/1"
+```
+
+`CreateTaskRequest` and `UpdateTaskRequest` define the JSON clients send. `TaskResponse` defines the JSON the API returns, including the server-generated ID. These records are DTOs (Data Transfer Objects): they define the data crossing the HTTP boundary. `Task` is the application's stored representation. For this lesson, tasks live in memory and reset when the application restarts; we will move storage behind a repository in a later lesson.
+
+The `PUT` endpoint replaces both editable fields. Input validation and a shared error response format are the next lesson.
+
 ## Learning Path
 
 1. HTTP methods, status codes, paths, and query parameters
