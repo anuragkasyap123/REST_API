@@ -1,4 +1,4 @@
-package com.example.restapi;
+package test.java.com.example.restapi;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

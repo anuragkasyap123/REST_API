@@ -1,4 +1,4 @@
-package com.example.restapi;
+package main.java.com.example.restapi;
 
 import java.net.URI;
 import java.util.Comparator;
