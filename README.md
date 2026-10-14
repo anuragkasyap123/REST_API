@@ -87,13 +87,30 @@ curl.exe -i -X DELETE "http://localhost:8080/api/tasks/1"
 
 `CreateTaskRequest` and `UpdateTaskRequest` define the JSON clients send. `TaskResponse` defines the JSON the API returns, including the server-generated ID. These records are DTOs (Data Transfer Objects): they define the data crossing the HTTP boundary. `Task` is the application's stored representation. For this lesson, tasks live in memory and reset when the application restarts; we will move storage behind a repository in a later lesson.
 
-The `PUT` endpoint replaces both editable fields. Input validation and a shared error response format are the next lesson.
+The `PUT` endpoint replaces both editable fields. Task titles are required, cannot be blank, and may contain at most 200 characters. The API validates both create and replace requests before changing task data. For example, this request is rejected with `400 Bad Request`:
+
+```powershell
+curl.exe -i -X POST "http://localhost:8080/api/tasks" -H "Content-Type: application/json" --data-raw '{"title":"   ","completed":false}'
+```
+
+Errors use one JSON shape, including validation failures and missing tasks:
+
+```json
+{
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Request validation failed",
+  "fieldErrors": {"title": "must not be blank"}
+}
+```
+
+`fieldErrors` is an object keyed by request field; it is empty for errors that do not belong to a particular field, such as malformed JSON or a missing task. `ApiExceptionHandler` centralizes these responses so clients can handle errors consistently.
 
 ## Learning Path
 
 1. HTTP methods, status codes, paths, and query parameters
 2. CRUD endpoints and request/response DTOs
-3. Validation and consistent error responses
+3. Validation and consistent error responses (task titles are nonblank and limited to 200 characters; errors share a JSON format)
 4. Service and repository layers
 5. Database persistence and migrations
 6. Pagination, filtering, and API documentation

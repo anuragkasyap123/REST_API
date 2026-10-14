@@ -1,4 +1,4 @@
-package main.java.com.example.restapi;
+package com.example.restapi;
 
 import java.net.URI;
 import java.util.Comparator;
@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class TaskController {
     private final AtomicLong nextId = new AtomicLong(1);
 
     @PostMapping
-    public ResponseEntity<TaskResponse> create(@RequestBody CreateTaskRequest request) {
+    public ResponseEntity<TaskResponse> create(@Valid @RequestBody CreateTaskRequest request) {
         long id = nextId.getAndIncrement();
         Task task = new Task(id, request.title(), request.completed());
         tasks.put(id, task);
@@ -46,7 +47,7 @@ public class TaskController {
     public ResponseEntity<TaskResponse> findById(@PathVariable long id) {
         Task task = tasks.get(id);
         if (task == null) {
-            return ResponseEntity.notFound().build();
+            throw new TaskNotFoundException(id);
         }
         return ResponseEntity.ok(toResponse(task));
     }
@@ -54,11 +55,11 @@ public class TaskController {
     @PutMapping("/{id}")
     public ResponseEntity<TaskResponse> replace(
             @PathVariable long id,
-            @RequestBody UpdateTaskRequest request) {
+            @Valid @RequestBody UpdateTaskRequest request) {
         Task task = tasks.computeIfPresent(id,
                 (taskId, existing) -> new Task(taskId, request.title(), request.completed()));
         if (task == null) {
-            return ResponseEntity.notFound().build();
+            throw new TaskNotFoundException(id);
         }
         return ResponseEntity.ok(toResponse(task));
     }
@@ -66,7 +67,7 @@ public class TaskController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
         if (tasks.remove(id) == null) {
-            return ResponseEntity.notFound().build();
+            throw new TaskNotFoundException(id);
         }
         return ResponseEntity.noContent().build();
     }
