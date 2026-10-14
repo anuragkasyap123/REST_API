@@ -1,0 +1,31 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "REST API: test",
+			"type": "shell",
+			"command": "mvn",
+			"args": ["--batch-mode", "--no-transfer-progress", "clean", "test"],
+			"options": {
+				"env": {
+					"JAVA_HOME": "C:\\Program Files\\Eclipse Adoptium\\jdk-25.0.4.101-hotspot"
+				}
+			},
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "REST API: run",
+			"type": "shell",
+			"command": "mvn",
+			"args": ["spring-boot:run"],
+			"options": {
+				"env": {
+					"JAVA_HOME": "C:\\Program Files\\Eclipse Adoptium\\jdk-25.0.4.101-hotspot"
+				}
+			},
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}

@@ -1,0 +1,30 @@
+name: Java Build Check
+
+on:
+  push:
+    branches:
+      - main
+      - 'dev*'
+  pull_request:
+    branches:
+      - main
+      - 'dev*'
+
+jobs:
+  build:
+    name: Build and test REST API
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      - name: Build and test
+        run: mvn --batch-mode --no-transfer-progress clean verify
